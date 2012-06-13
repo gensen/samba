@@ -63,9 +63,13 @@ end
 
 if users
   users.each do |u|
-    samba_user u["id"] do
-      password u["smbpasswd"]
-      action [:create, :enable]
+    if u.has_key?("smbpasswd")
+      samba_user u["id"] do
+        password u["smbpasswd"]
+        action [:create, :enable]
+      end
+    else
+      log "User #{u.id} doesn't have an smbpasswd entry, skipping"
     end
   end
 end
